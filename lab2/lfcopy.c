@@ -9,7 +9,7 @@ int main()
 	char buffer[100];
 	int chars_read = readline(buffer, 100);
 
-	printf("%d characters read\n", chars_read);
+	int chars_written = writeline(buffer);
 
 	return 0;
 }
