@@ -1,8 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-
-int readline(char line[], int max);
-int writeline(const char line[]);
+#include "line_functions.h"
 
 int main()
 {
@@ -11,27 +7,11 @@ int main()
 
 	int chars_written = writeline(buffer);
 
+	if (chars_read != chars_written) 
+	{
+		puts("There was a problem while reading the line. Try again");
+		return 1;
+	}
+
 	return 0;
-}
-
-/* readline: read a line from statndard input, return its length or 0
- */
-int readline(char line[], int max)
-{
-	if (fgets(line, max, stdin) == NULL)
-	{
-		return 0;
-	}
-	else
-	{
-		return strlen(line);
-	}
-}
-
-/* writeline: write line to standard output, return number of chars written
- */
-int writeline(const char line[])
-{
-	fputs(line, stdout);
-	return strlen(line);
 }
