@@ -7,7 +7,7 @@ int main()
     int buf_size = 100;
     char buffer[buf_size];
 
-    for (int i; i < 11; i++)
+    for (int i=0; i < 11; i++)
     {
         int chars_read = readline(buffer, buf_size);
         int chars_written = writeline(buffer);
