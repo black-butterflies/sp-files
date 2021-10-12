@@ -7,13 +7,13 @@ int main()
     int buf_size = 100;
     char buffer[buf_size];
 
-    do
+    for (int i; i < 11; i++)
     {
         int chars_read = readline(buffer, buf_size);
-        writeline(buffer);
+        int chars_written = writeline(buffer);
 
-        lines++;
-    } while (chars_read > 0);
+        printf("Read %d characters and wrote %d characters\n", chars_read, chars_written);
+    }
 
     return lines;
 }
