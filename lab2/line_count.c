@@ -11,7 +11,7 @@ int main()
     do
     {
         chars_read = readline(buffer, buf_size);
-        writeline;
+        writeline(buffer);
 
         lines++;
     } while (chars_read > 0);
