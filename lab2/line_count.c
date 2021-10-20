@@ -8,13 +8,20 @@ int main()
     char buffer[buf_size];
 
     int chars_read;
-    do
+    while (1)
     {
         chars_read = readline(buffer, buf_size);
-        writeline(buffer);
+        if (chars_read > 0)
+        {
+            lines++;
+        }
+        else
+        {
+            break;
+        }
+    }
 
-        lines++;
-    } while (chars_read > 0);
+    printf("%d lines\n", lines);
 
     return lines;
 }
