@@ -10,5 +10,7 @@ tldlist.o: tldlist.h tldlist.c
 tldmonitor.o: tldmonitor.c date.h tldlist.h
 	clang -Wall -Werror -o tldmonitor.o -c tldmonitor.c
 
+.PHONY: clean
+
 clean:
 	rm -f *.o tldmonitor
