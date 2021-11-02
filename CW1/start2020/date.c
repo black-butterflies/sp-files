@@ -10,8 +10,6 @@ struct date
     int year;
 };
 
-typedef struct date Date;
-
 Date *date_create(char *datestr)
 {
     char err_msg[] = "Date format must be DD/MM/YYYY";
@@ -73,8 +71,11 @@ Date *date_duplicate(Date *d)
 
 int date_compare(Date *d1, Date *d2)
 {
-    // think
-    return 0;
+    int year_diff = 1000 * (d1->year - d2->year);
+    int month_diff = 100 * (d1->month - d2->month);
+    int day_diff = d1->day - d2->day;
+
+    return year_diff + month_diff + day_diff;
 }
 
 void date_destroy(Date *d)

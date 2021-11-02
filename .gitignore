@@ -6,3 +6,9 @@
 
 # pdfs
 *.pdf
+
+# vscode settings
+.vscode/
+
+# testing folders
+tests/
