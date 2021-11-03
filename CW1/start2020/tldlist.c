@@ -33,7 +33,12 @@ static TLDNode *tldnode_create(char *domain)
     TLDNode *node = (TLDNode *)malloc(sizeof(TLDNode));
     if (node != NULL)
     {
-        node->domain = domain;
+        node->domain = (char *)malloc((strlen(domain) + 1) * sizeof(char));
+        if (!node->domain)
+        {
+            return NULL;
+        }
+        strcpy(node->domain, domain);
         node->parent = node->left = node->right = NULL;
         node->count = 1;
     }
@@ -73,6 +78,8 @@ static void tldnode_destroy(TLDNode *node)
     tldnode_destroy(node->left);
     tldnode_destroy(node->right);
 
+    free(node->domain);
+    node->domain = NULL;
     free(node);
     node = NULL;
 }
@@ -157,7 +164,7 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
     TLDNode *parent, *cursor = tld->head;
     while (cursor != NULL && strcmp(domain, cursor->domain) != 0)
     {
-        parent = cursor->parent;
+        parent = cursor;
         if (strcmp(domain, cursor->domain) < 0)
         {
             cursor = cursor->left;
@@ -236,10 +243,6 @@ TLDIterator *tldlist_iter_create(TLDList *tld)
 
 static TLDNode *sucessor(TLDNode *node)
 {
-    if (!node)
-    {
-        return NULL;
-    }
     if (node->right != NULL)
     {
         return tree_minimum(node->right);
@@ -259,7 +262,10 @@ static TLDNode *sucessor(TLDNode *node)
 TLDNode *tldlist_iter_next(TLDIterator *iter)
 {
     TLDNode *current_node = iter->current_node;
-    iter->current_node = sucessor(current_node);
+    if (current_node != NULL)
+    {
+        iter->current_node = sucessor(current_node);
+    }
 
     return current_node;
 }
