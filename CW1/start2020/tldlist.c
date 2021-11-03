@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "date.h"
 #include "tldlist.h"
 
@@ -65,6 +66,10 @@ TLDList *tldlist_create(Date *begin, Date *end)
  */
 static void tldnode_destroy(TLDNode *node)
 {
+    if (!node)
+    {
+        return;
+    }
     tldnode_destroy(node->left);
     tldnode_destroy(node->right);
 
@@ -163,7 +168,7 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
         }
     }
 
-    if (!cursor)
+    if (cursor != NULL)
     {
         // we found a node with the same domain
         (cursor->count)++;
@@ -177,6 +182,11 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
         if (!new_node)
         {
             return 0;
+        }
+        // if the parent is null, we're at the top of the list
+        if (!parent)
+        {
+            parent = tld->head;
         }
         new_node->parent = parent;
         // check on which side we have to add the node
@@ -226,6 +236,10 @@ TLDIterator *tldlist_iter_create(TLDList *tld)
 
 static TLDNode *sucessor(TLDNode *node)
 {
+    if (!node)
+    {
+        return NULL;
+    }
     if (node->right != NULL)
     {
         return tree_minimum(node->right);
