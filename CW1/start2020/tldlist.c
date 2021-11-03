@@ -36,11 +36,18 @@ static TLDNode *tldnode_create(char *domain)
         node->domain = (char *)malloc((strlen(domain) + 1) * sizeof(char));
         if (!node->domain)
         {
+            free(node->domain);
+            free(node);
             return NULL;
         }
         strcpy(node->domain, domain);
         node->parent = node->left = node->right = NULL;
         node->count = 1;
+    }
+    else
+    {
+        free(node);
+        return NULL;
     }
 
     return node;
@@ -61,6 +68,11 @@ TLDList *tldlist_create(Date *begin, Date *end)
         list->end_date = end;
         list->elements = 0;
         list->unique_tlds = 0;
+    }
+    else
+    {
+        free(list);
+        return NULL;
     }
 
     return list;
@@ -138,6 +150,7 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
     char *domain = get_tld(hostname);
     if (!domain)
     {
+        free(domain);
         // the domain is invalid, so we don't add it to the list
         return 0;
     }
@@ -148,6 +161,7 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
         TLDNode *new_node = tldnode_create(domain);
         if (!new_node)
         {
+            free(new_node);
             // if there was an issue while creating the node, don't add it
             return 0;
         }
@@ -188,6 +202,7 @@ int tldlist_add(TLDList *tld, char *hostname, Date *d)
         TLDNode *new_node = tldnode_create(domain);
         if (!new_node)
         {
+            free(new_node);
             return 0;
         }
         // if the parent is null, we're at the top of the list
@@ -236,6 +251,11 @@ TLDIterator *tldlist_iter_create(TLDList *tld)
     {
         iter->list = tld;
         iter->current_node = tree_minimum(tld->head);
+    }
+    else
+    {
+        free(iter);
+        return NULL;
     }
 
     return iter;
