@@ -41,11 +41,15 @@ Date *date_create(char *datestr)
 
     // allocate the memory for a date struct
     Date *date = malloc(sizeof(Date));
-    if (date)
+    if (date != NULL)
     {
         date->day = day;
         date->month = month;
         date->year = year;
+    }
+    else
+    {
+        free(date);
     }
 
     return date;
@@ -59,11 +63,15 @@ Date *date_duplicate(Date *d)
     }
 
     Date *dup = malloc(sizeof(Date));
-    if (dup)
+    if (dup != NULL)
     {
         dup->day = d->day;
         dup->month = d->month;
         dup->year = d->year;
+    }
+    else
+    {
+        free(dup);
     }
 
     return dup;
