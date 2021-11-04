@@ -46,13 +46,17 @@ tldmonitor.o: tldmonitor.c date.h tldlist.h
 # tldmonitor.o: tldmonitor.c date.h tldlist.h
 # 	clang -Wall -Werror -g -o tldmonitor.o -c tldmonitor.c
 
-.PHONY: clean small large
+.PHONY: clean small large output_compare
 
 clean:
 	rm -f *.o tldmonitor
 
 small:
-	./tldmonitor 01/01/1900 31/12/2100 small.txt
+	./tldmonitor 01/01/2000 01/09/2020 small.txt
 
 large:
-	./tldmonitor 01/01/1900 31/12/2100 large.txt
+	./tldmonitor 01/01/2000 01/09/2020 large.txt
+
+output_compare: 
+	./tldmonitor 01/01/2000 01/09/2020 <small.txt | sort -n | diff - small.out
+	./tldmonitor 01/01/2000 01/09/2020 <large.txt | sort -n | diff - large.out

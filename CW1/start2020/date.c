@@ -79,11 +79,46 @@ Date *date_duplicate(Date *d)
 
 int date_compare(Date *d1, Date *d2)
 {
-    int year_diff = 1000 * (d1->year - d2->year);
-    int month_diff = 100 * (d1->month - d2->month);
-    int day_diff = d1->day - d2->day;
+    if (!d1 || !d2)
+    {
+        // One of them is null, just return 1
+        return 1;
+    }
 
-    return year_diff + month_diff + day_diff;
+    if (d1->year == d2->year)
+    {
+        if (d1->month == d2->month)
+        {
+            if (d1->day == d2->day)
+            {
+                return 0;
+            }
+            else if (d1->day > d2->day)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        else if (d1->month > d2->month)
+        {
+            return 2;
+        }
+        else
+        {
+            return -2;
+        }
+    }
+    else if (d1->year > d2->year)
+    {
+        return 3;
+    }
+    else
+    {
+        return -3;
+    }
 }
 
 void date_destroy(Date *d)

@@ -128,14 +128,7 @@ static char *get_tld(char *hostname)
 
 int tldlist_add(TLDList *tld, char *hostname, Date *d)
 {
-    // make sure that the date is wihtin the range of the list
-    int comp = date_compare(d, tld->begin_date);
-    if (comp < 0)
-    {
-        return 0;
-    }
-    comp = date_compare(d, tld->end_date);
-    if (comp > 0)
+    if (date_compare(d, tld->begin_date) < 0 || date_compare(d, tld->end_date) > 0)
     {
         return 0;
     }
