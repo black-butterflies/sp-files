@@ -210,6 +210,6 @@ TLDNode *tldlist_iter_next(TLDIterator *iter) {
         return iter->current;
 }
 
-void *tldlist_iter_destroy(TLDIterator *iter) {
+void tldlist_iter_destroy(TLDIterator *iter) {
         // nothing.
 }
