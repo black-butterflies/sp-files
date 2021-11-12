@@ -15,7 +15,10 @@ struct date {
 };
 
 Date *date_create(char *datestr) {
-        int day = atoi(strtok(datestr,"/"));
+        char copy[11];
+        strcpy(copy, datestr);
+        copy[10] = '\0';
+        int day = atoi(strtok(copy,"/"));
         int month = atoi(strtok(NULL,"/"));
         int year = atoi(strtok(NULL,"/"));
         struct date *d;
