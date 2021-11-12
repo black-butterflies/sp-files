@@ -2,10 +2,11 @@
 // SP Exercise 1a
 // This is my own work as defined in the Academics Ethics Agreement I have signed
 
-#include "date.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "date.h"
 
 struct date {
         int day;

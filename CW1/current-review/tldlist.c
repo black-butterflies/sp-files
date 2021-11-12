@@ -2,12 +2,12 @@
 // SP Exercise 1a
 // This is my own work as defined in the Academics Ethics Agreement I have signed
 
-#include "tldlist.h"
-#include "date.c"
+
+// #include "date.c"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "tldlist.h"
 
 // Initialising tldlist structure
 struct tldlist {
@@ -99,7 +99,7 @@ void tldlist_destroy(TLDList *list) {
 TLDNode *tldlist_insert(TLDNode *root, char *hostname, TLDList *tld) {
         if (tld->root==NULL) {
                 tld->root=tldnode_create(hostname,tld);
-                TLDNode *checker = tld->root;
+                // TLDNode *checker = tld->root;
         }
         else {
 
@@ -208,4 +208,8 @@ TLDIterator *tldlist_iter_create(TLDList *tld) {
 TLDNode *tldlist_iter_next(TLDIterator *iter) {
         iter->current=iter->current->right;
         return iter->current;
+}
+
+void *tldlist_iter_destroy(TLDIterator *iter) {
+        // nothing.
 }
