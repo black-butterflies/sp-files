@@ -1,6 +1,12 @@
+/*
+ * Sarahi Villegas Quinonez - 2477179V
+ * SP Exercise 1a
+ *
+ * This is my own work as defined in the Academics Ethics agreement I have signed
+ */
+
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include "date.h"
 #include "tldlist.h"
 
