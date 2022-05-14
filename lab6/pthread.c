@@ -17,6 +17,6 @@ int main()
     assert(!err);
     printf("Created thread\n");
 
-    err = pthread_join(thread, NULL);
-    assert(!err);
+    // err = pthread_join(thread, NULL);
+    // assert(!err);
 }
