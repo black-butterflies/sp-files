@@ -5,15 +5,17 @@
 
 #include <unistd.h>
 
-int randInt() {
-    return (rand() % 50) + 50;
+int randInt()
+{
+  return (rand() % 50) + 50;
 }
 
-struct BoundedBuffer {
+struct BoundedBuffer
+{
   int start;
   int end;
   int size;
-  int* buffer;
+  int *buffer;
   pthread_mutex_t m;
   pthread_cond_t add;
   pthread_cond_t remove;
@@ -21,27 +23,36 @@ struct BoundedBuffer {
 
 typedef struct BoundedBuffer BoundedBuffer;
 
-BoundedBuffer * createBoundedBuffer(int size) {
-  if (size < 1) return NULL;
-  BoundedBuffer * bb = malloc(sizeof(BoundedBuffer));
-  if (bb) {
+BoundedBuffer *createBoundedBuffer(int size)
+{
+  if (size < 1)
+    return NULL;
+  BoundedBuffer *bb = malloc(sizeof(BoundedBuffer));
+  if (bb)
+  {
     bb->start = 0;
-    bb->end = size-1;
+    bb->end = size - 1;
     bb->size = size;
     bb->buffer = malloc(sizeof(int) * size);
-    if (!bb->buffer) {
+    if (!bb->buffer)
+    {
       free(bb);
       return NULL;
     }
-    int err = pthread_mutex_init(&bb->m, NULL); assert(!err);
-    err = pthread_cond_init(&bb->add, NULL); assert(!err);
-    err = pthread_cond_init(&bb->remove, NULL); assert(!err);
+    int err = pthread_mutex_init(&bb->m, NULL);
+    assert(!err);
+    err = pthread_cond_init(&bb->add, NULL);
+    assert(!err);
+    err = pthread_cond_init(&bb->remove, NULL);
+    assert(!err);
   }
   return bb;
 }
 
-void destroyBoundedBuffer(BoundedBuffer * bb) {
-  if (!bb) return;
+void destroyBoundedBuffer(BoundedBuffer *bb)
+{
+  if (!bb)
+    return;
   pthread_mutex_destroy(&bb->m);
   pthread_cond_destroy(&bb->add);
   pthread_cond_destroy(&bb->remove);
@@ -49,10 +60,13 @@ void destroyBoundedBuffer(BoundedBuffer * bb) {
   free(bb);
 }
 
-void addItem(BoundedBuffer * bb, int item) {
-  if (!bb) return;
+void addItem(BoundedBuffer *bb, int item)
+{
+  if (!bb)
+    return;
   pthread_mutex_lock(&bb->m);
-  while (bb->start == bb->end) { // buffer is full
+  while (bb->start == bb->end)
+  { // buffer is full
     printf("== Buffer is full ==\n");
     pthread_cond_wait(&bb->add, &bb->m);
   }
@@ -65,10 +79,13 @@ void addItem(BoundedBuffer * bb, int item) {
   pthread_cond_signal(&bb->remove);
 }
 
-int removeItem(BoundedBuffer * bb) {
-  if (!bb) assert(0);
+int removeItem(BoundedBuffer *bb)
+{
+  if (!bb)
+    assert(0);
   pthread_mutex_lock(&bb->m);
-  while ( ((bb->end + 1) % bb->size) == bb->start ) { // buffer is empty
+  while (((bb->end + 1) % bb->size) == bb->start)
+  { // buffer is empty
     printf("== Buffer is empty ==\n");
     pthread_cond_wait(&bb->remove, &bb->m);
   }
@@ -80,10 +97,12 @@ int removeItem(BoundedBuffer * bb) {
   return item;
 }
 
-void * producer(void * arg) {
-  BoundedBuffer * bb = (BoundedBuffer*)arg;
+void *producer(void *arg)
+{
+  BoundedBuffer *bb = (BoundedBuffer *)arg;
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++)
+  {
     int item = randInt();
     printf("produced item %d\n", item);
     addItem(bb, item);
@@ -92,10 +111,12 @@ void * producer(void * arg) {
   return NULL;
 }
 
-void * consumer(void * arg) {
-  BoundedBuffer * bb = (BoundedBuffer*)arg;
+void *consumer(void *arg)
+{
+  BoundedBuffer *bb = (BoundedBuffer *)arg;
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 10; i++)
+  {
     int item = removeItem(bb);
     printf("    consumed item %d\n", item);
     usleep(randInt());
@@ -103,17 +124,22 @@ void * consumer(void * arg) {
   return NULL;
 }
 
-int main() {
-    srand(time(NULL));
-    pthread_t t1;
-    pthread_t t2;
-    int err;
+int main()
+{
+  srand(time(NULL));
+  pthread_t t1;
+  pthread_t t2;
+  int err;
 
-    BoundedBuffer * bb = createBoundedBuffer(4);
+  BoundedBuffer *bb = createBoundedBuffer(4);
 
-    err = pthread_create(&t1, NULL, consumer, bb); assert(err == 0);
-    err = pthread_create(&t2, NULL, producer, bb); assert(err == 0);
+  err = pthread_create(&t1, NULL, consumer, bb);
+  assert(err == 0);
+  err = pthread_create(&t2, NULL, producer, bb);
+  assert(err == 0);
 
-    err = pthread_join(t1, NULL); assert(err == 0);
-    err = pthread_join(t2, NULL); assert(err == 0);
+  err = pthread_join(t1, NULL);
+  assert(err == 0);
+  err = pthread_join(t2, NULL);
+  assert(err == 0);
 }

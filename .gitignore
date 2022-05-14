@@ -12,3 +12,6 @@
 
 # testing folders
 tests/
+
+# compiled binaries
+bin/

@@ -5,6 +5,7 @@
 
 void *PrintHelloWorld(void *arg)
 {
+    (void)arg;
     printf("Hello World from a Thread\n");
     return NULL;
 }
