@@ -4,14 +4,14 @@
 #include <thread>
 #include <future>
 #include <chrono>
- 
+
 void do_work(std::promise<void> barrier)
 {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     printf("Work done, signal now\n");
     barrier.set_value();
 }
- 
+
 int main()
 {
     std::promise<void> barrier;

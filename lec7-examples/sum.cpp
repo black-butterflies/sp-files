@@ -7,7 +7,8 @@
 #include <numeric>
 #include <iterator>
 
-float randInt() {
+float randInt()
+{
   static std::default_random_engine generator;
   static std::uniform_int_distribution<int> distribution(0, 10);
   return distribution(generator);
@@ -16,18 +17,24 @@ float randInt() {
 int parallelSum(std::vector<int>::iterator begin,
                 std::vector<int>::iterator end,
                 int acc,
-                int depth = 0) {
+                int depth = 0)
+{
   auto len = end - begin;
-  if (len < 1000 || depth > 3) { return std::accumulate(begin, end, 0); }
- 
-  auto mid = begin + len/2;
+  if (len < 1000 || depth > 3)
+  {
+    return std::accumulate(begin, end, 0);
+  }
+
+  auto mid = begin + len / 2;
   auto left_side = std::async(std::launch::async,
-    [=] { return parallelSum(begin, mid, acc, depth + 1); });
-  int right_side   = parallelSum(mid, end, acc, depth + 1);
+                              [=]
+                              { return parallelSum(begin, mid, acc, depth + 1); });
+  int right_side = parallelSum(mid, end, acc, depth + 1);
   return left_side.get() + right_side;
 }
 
-int main() {
+int main()
+{
   auto size = 1 * 1024 * 1024;
   auto vec = std::vector<int>(size);
   std::generate(vec.begin(), vec.end(), randInt);

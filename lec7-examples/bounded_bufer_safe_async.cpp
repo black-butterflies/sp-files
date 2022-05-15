@@ -7,13 +7,15 @@
 #include <random>
 #include <future>
 
-int randInt() {
+int randInt()
+{
   static std::default_random_engine generator;
-  static std::uniform_int_distribution<int> distribution(50,100);
+  static std::uniform_int_distribution<int> distribution(50, 100);
   return distribution(generator);
 }
 
-struct BoundedBuffer {
+struct BoundedBuffer
+{
 private:
   int start;
   int end;
@@ -24,25 +26,30 @@ private:
   std::condition_variable remove_cv;
 
 public:
-  BoundedBuffer(int max_size) {
-    start   = 0;
-    end     = max_size-1;
-    size    = max_size;
-    buffer  = std::vector<int>(size);
+  BoundedBuffer(int max_size)
+  {
+    start = 0;
+    end = max_size - 1;
+    size = max_size;
+    buffer = std::vector<int>(size);
   }
 
-  void addItem(int item) {
+  void addItem(int item)
+  {
     std::unique_lock<std::mutex> lock(m);
-    add_cv.wait(lock, [this]{ return start != end; });
+    add_cv.wait(lock, [this]
+                { return start != end; });
 
     buffer[start] = item;
     start = (start + 1) % size;
     remove_cv.notify_one();
   }
 
-  int removeItem() {
+  int removeItem()
+  {
     std::unique_lock<std::mutex> lock(m);
-    remove_cv.wait(lock, [this]{ return ((end + 1) % size) != start; });
+    remove_cv.wait(lock, [this]
+                   { return ((end + 1) % size) != start; });
 
     end = (end + 1) % size;
     int item = buffer[end];
@@ -51,28 +58,29 @@ public:
   }
 };
 
-int main() {
-    auto bb = BoundedBuffer{4};
+int main()
+{
+  auto bb = BoundedBuffer{4};
 
-    auto consumer = std::async([bb = &bb]{
+  auto consumer = std::async([bb = &bb]
+                             {
       for (int i = 0; i < 10; i++) {
         int item = bb->removeItem();
         printf("    consumed item %d\n", item);
         std::this_thread::sleep_for(std::chrono::milliseconds(randInt()));
       }
-      return "consumer done";
-    });
+      return "consumer done"; });
 
-    auto producer = std::async([bb = &bb]{
+  auto producer = std::async([bb = &bb]
+                             {
       for (int i = 0; i < 10; i++) {
         int item = randInt();
         printf("produced item %d\n", item);
         bb->addItem(item);
         std::this_thread::sleep_for(std::chrono::milliseconds(randInt()));
       }
-      return "producer done";
-    });
+      return "producer done"; });
 
-    printf("%s\n", consumer.get());
-    printf("%s\n", producer.get());
+  printf("%s\n", consumer.get());
+  printf("%s\n", producer.get());
 }
